@@ -26,6 +26,7 @@ and send local journald logs.
   ```
   $ sudo cp misc/fek-container.service /etc/systemd/system/
   $ sudo cp misc/journald-fluentd.service /etc/systemd/system/
+  $ sudo sed -ie 's!@@CWD@@!'`pwd`'!g' /etc/systemd/system/fek-container.service
   $ sudo systemctl daemon-reload
   $ sudo systemctl enable fek-container.service
   $ sudo systemctl enable journald-fluentd.service
