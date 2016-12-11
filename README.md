@@ -1,5 +1,5 @@
-ex-fek
-======
+fek-docker-example
+==================
 
 Fluentd + Elasticsearch + Kibana
 
