@@ -31,14 +31,34 @@ RUN yum localinstall -y \
 	&& systemctl enable kibana.service \
 	&& yum clean all
 
+### fluentd
+
+COPY misc/td.repo /etc/yum.repos.d/td.repo
+RUN rpm --import https://packages.treasuredata.com/GPG-KEY-td-agent \
+	&& yes | yum install -y td-agent \
+	&& systemctl enable td-agent.service \
+	&& yum clean all
+
+RUN yes | yum install -y gcc-c++ libcurl-devel \
+	&& sh -c 'echo "gem: --no-document" >> /opt/td-agent/.gemrc' \
+	&& HOME=/opt/td-agent td-agent-gem install fluent-plugin-elasticsearch \
+	&& yum clean all \
+	&& rm -rf /tmp/* /var/tmp/* /opt/td-agent/embedded/lib/ruby/gems/*/cache/*.gem
+
 ### envs
 
-COPY es-config /etc/elasticsearch
+RUN sed -ie \
+		's/^#\(discovery.zen.minimum_master_nodes: 1\)$/\1/g' \
+		/etc/elasticsearch/elasticsearch.yml
 VOLUME /var/lib/elasticsearch
 EXPOSE 9200 9300
 
-COPY kibana/kibana.yml /etc/kibana/kibana.yml
+RUN sed -ie 's/#\(server.host:\) "localhost"/\1 "0.0.0.0"/g' \
+		/etc/kibana/kibana.yml
 EXPOSE 5601
+
+COPY misc/td-agent.conf /etc/td-agent/td-agent.conf
+EXPOSE 24225
 
 CMD ["/usr/sbin/init"]
 

@@ -1,0 +1,14 @@
+version: "2"
+
+services:
+  fek:
+    build: .
+    privileged: true
+    ports:
+      - 5601:5601
+      - 9200:9200
+      - 9300:9300
+      - 24225:24225
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - ./es-data:/var/lib/elasticsearch
