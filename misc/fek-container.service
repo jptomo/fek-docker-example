@@ -1,0 +1,13 @@
+[Unit]
+Description=fek-container
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+ExecStart=
+ExecStart=/usr/bin/docker-compose -f /home/tomo/ex-fek/docker-compose.yml up
+ExecStop=/usr/bin/docker-compose -f /home/tomo/ex-fek/docker-compose.yml stop -t 2
+
+[Install]
+WantedBy=multi-user.target
