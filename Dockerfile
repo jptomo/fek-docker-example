@@ -40,8 +40,7 @@ RUN rpm --import https://packages.treasuredata.com/GPG-KEY-td-agent \
 	&& yum clean all
 
 RUN yes | yum install -y gcc-c++ libcurl-devel \
-	&& sh -c 'echo "gem: --no-document" >> /opt/td-agent/.gemrc' \
-	&& HOME=/opt/td-agent td-agent-gem install fluent-plugin-elasticsearch \
+	&& /usr/sbin/td-agent-gem install --no-document fluent-plugin-elasticsearch \
 	&& yum clean all \
 	&& rm -rf /tmp/* /var/tmp/* /opt/td-agent/embedded/lib/ruby/gems/*/cache/*.gem
 
